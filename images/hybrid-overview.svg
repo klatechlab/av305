@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
-<rect width="1600" height="900" fill="#f8fafc"/>
-<rect x="40" y="40" width="1520" height="820" rx="32" fill="none" stroke="#8b5cf6" stroke-width="6" stroke-dasharray="18 14"/>
-<text x="800" y="410" text-anchor="middle" font-family="Tahoma, sans-serif" font-size="54" font-weight="700" fill="#4c1d95">ตำแหน่งใส่ภาพผัง Hybrid ชุดที่ 2</text>
-<text x="800" y="485" text-anchor="middle" font-family="Tahoma, sans-serif" font-size="30" fill="#7c3aed">แทนที่ไฟล์ images/hybrid-overview.svg ด้วยภาพจริง</text>
-</svg>
