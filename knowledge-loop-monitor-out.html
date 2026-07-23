@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOOP, Monitor Out และการป้องกันภาพวนกลับ</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              50: '#f2f7ff',
+              100: '#e3edff',
+              200: '#c8dcff',
+              600: '#2459c4',
+              700: '#1c469c',
+              800: '#193c7d',
+              900: '#172f5f',
+              950: '#0d1c3b'
+            }
+          },
+          boxShadow: {
+            soft: '0 14px 40px rgba(15, 23, 42, 0.08)',
+            card: '0 8px 24px rgba(15, 23, 42, 0.07)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Tahoma, "Noto Sans Thai", system-ui, sans-serif; }
+    .flow-arrow::after {
+      content: "↓";
+      display: block;
+      text-align: center;
+      margin-top: .5rem;
+      font-size: 1.75rem;
+      line-height: 1;
+      color: #2563eb;
+      font-weight: 700;
+    }
+    .flow-arrow:last-child::after { display:none; }
+    @media print {
+      .no-print { display:none !important; }
+      body { background:white !important; }
+      .shadow-soft, .shadow-card { box-shadow:none !important; }
+      section { break-inside:avoid; }
+    }
+  </style>
+
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+  <div class="no-print sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
+      <a href="index.html" class="font-black text-navy-800 text-lg tracking-tight">คู่มือระบบภาพห้องประชุม</a>
+      <div class="flex flex-wrap gap-2 text-sm font-semibold">
+        <a href="index.html" class="rounded-lg bg-slate-100 px-3 py-2 text-slate-700 hover:bg-slate-200">Home</a>
+        <a href="manual-system.html" class="rounded-lg bg-blue-50 px-3 py-2 text-blue-800 hover:bg-blue-100">ระบบภาพหลัก</a>
+        <a href="manual-hybrid.html" class="rounded-lg bg-violet-50 px-3 py-2 text-violet-800 hover:bg-violet-100">Hybrid Meeting</a>
+        <a href="knowledge-loop-monitor-out.html" class="rounded-lg bg-amber-600 px-3 py-2 text-white hover:bg-amber-700 shadow-sm">LOOP / Monitor Out</a>
+        <a href="av-use-cases.html" class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-800 hover:bg-emerald-100">9 รูปแบบการใช้งาน</a>
+        <button type="button" onclick="window.print()" class="rounded-lg bg-navy-700 px-3 py-2 text-white hover:bg-navy-800 transition">พิมพ์</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนหัว -->
+  <header class="bg-gradient-to-br from-navy-950 via-slate-900 to-amber-700 text-white">
+    <div class="mx-auto max-w-7xl px-5 py-12 lg:py-16">
+      <span class="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-amber-100">
+        แหล่งความรู้ระบบภาพ
+      </span>
+
+      <h1 class="mt-5 text-3xl font-black leading-tight sm:text-5xl">
+        LOOP, Monitor Out และการป้องกันภาพวนกลับ
+      </h1>
+
+      <p class="mt-5 max-w-4xl text-lg leading-8 text-slate-200">
+        สรุปหน้าที่ของช่อง HDMI LOOP และ HDMI Monitor Out บน NovaStar VX600
+        พร้อมแนวทางนำ Monitor Out กลับเข้า VAVE Matrix อย่างปลอดภัย
+        และข้อห้ามสำคัญที่อาจทำให้เกิดภาพกระจกซ้อนหรือ Video Feedback Loop
+      </p>
+    </div>
+  </header>
+
+  <div class="mx-auto grid max-w-7xl gap-8 px-5 py-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+    <!-- สารบัญ -->
+    <aside class="no-print lg:sticky lg:top-24 lg:self-start">
+      <nav class="rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-200">
+        <p class="font-black text-slate-900">สารบัญ</p>
+
+        <div class="mt-4 space-y-1 text-sm">
+          <a href="#quick-summary" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            1. สรุปสั้นที่สุด
+          </a>
+
+          <a href="#loop" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            2. HDMI LOOP
+          </a>
+
+          <a href="#monitor-out" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            3. HDMI Monitor Out
+          </a>
+
+          <a href="#compare" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            4. ตารางเปรียบเทียบ
+          </a>
+
+          <a href="#return-to-matrix" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            5. วนกลับเข้า VAVE
+          </a>
+
+          <a href="#feedback-loop" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            6. ภาพกระจกซ้อน
+          </a>
+
+          <a href="#safe-routing" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            7. Routing ที่ปลอดภัย
+          </a>
+
+          <a href="#recovery" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            8. วิธีแก้เมื่อกดผิด
+          </a>
+
+          <a href="#applications" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            9. ประโยชน์การใช้งาน
+          </a>
+
+          <a href="#source" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+            10. แหล่งอ้างอิง
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="space-y-8">
+      <!-- 1 -->
+      <section
+        id="quick-summary"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          1. สรุปสั้นที่สุด
+        </h2>
+
+        <div class="mt-6 grid gap-5 md:grid-cols-2">
+          <article class="rounded-2xl border border-violet-200 bg-violet-50 p-5">
+            <p class="text-sm font-bold uppercase tracking-wide text-violet-700">
+              HDMI LOOP
+            </p>
+
+            <h3 class="mt-2 text-xl font-black text-violet-950">
+              ภาพตรงจาก Input ที่จับคู่
+            </h3>
+
+            <p class="mt-3 leading-7 text-violet-900">
+              LOOP ใช้ส่งผ่านภาพต้นฉบับจากพอร์ต Input ที่จับคู่กันโดยตรง
+              ไม่ได้เปลี่ยนตามภาพที่ NovaStar กำลังจัดหรือกำลังแสดงบนจอ LED Wall
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <p class="text-sm font-bold uppercase tracking-wide text-emerald-700">
+              HDMI MONITOR OUT
+            </p>
+
+            <h3 class="mt-2 text-xl font-black text-emerald-950">
+              ภาพผลลัพธ์หลังประมวลผล
+            </h3>
+
+            <p class="mt-3 leading-7 text-emerald-900">
+              Monitor Out ใช้แสดงภาพที่สัมพันธ์กับภาพบนจอ LED Wall
+              จึงเปลี่ยนตาม Source, Main Layer, PIP, การสเกล และการจัดตำแหน่งภาพ
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-6 rounded-2xl border-2 border-red-300 bg-red-50 p-5">
+          <p class="text-lg font-black text-red-950">
+            ข้อห้ามสำคัญ
+          </p>
+
+          <p class="mt-2 leading-8 text-red-900">
+            หากนำ NovaStar Monitor Out กลับเข้า VAVE Input ช่องหนึ่ง
+            ห้ามเลือก Input ช่องนั้นออกทาง <strong>VAVE Output A</strong>
+            ในขณะที่ Output A ยังส่งสัญญาณกลับไปยัง NovaStar
+            เพราะจะเกิดวงจรภาพวนกลับเข้าสู่ตัวเอง
+          </p>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section
+        id="loop"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          2. HDMI LOOP ทำหน้าที่อะไร
+        </h2>
+
+        <p class="mt-4 leading-8 text-slate-700">
+          บน NovaStar VX600 ช่อง HDMI 1.3-1 รองรับ Loop-through
+          หมายความว่าสัญญาณที่เข้าทาง HDMI 1 จะถูกส่งผ่านออกทางช่อง LOOP
+          เพื่อให้นำไปต่อจอ Monitor หรืออุปกรณ์อื่นได้
+        </p>
+
+        <div class="mt-6 space-y-2">
+          <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">
+            แหล่งภาพ → NovaStar HDMI Input 1
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">
+            HDMI LOOP ของ Input 1
+          </div>
+
+          <div class="rounded-xl bg-slate-900 p-4 text-center font-bold text-white">
+            Monitor ตรวจสอบภาพต้นฉบับ
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <h3 class="font-black text-amber-950">
+            กรณีเพิ่ม Input 2 และ Input 3
+          </h3>
+
+          <p class="mt-2 leading-7 text-amber-900">
+            LOOP ของ HDMI Input 1 จะไม่เปลี่ยนไปแสดง Input 2 หรือ Input 3
+            แม้จะสลับภาพหลักของ NovaStar ไปใช้แหล่งภาพอื่น
+            จอที่ต่อกับ LOOP ของ Input 1 จะยังคงเห็นภาพจาก Input 1 เท่านั้น
+          </p>
+        </div>
+
+        <div class="mt-6 rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+          <p class="font-black text-slate-900">
+            LOOP เหมาะสำหรับตรวจสอบอะไร
+          </p>
+
+          <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-700">
+            <li>แหล่งภาพต้นทางเปิดอยู่หรือไม่</li>
+            <li>สาย HDMI ก่อนเข้า NovaStar ใช้งานได้หรือไม่</li>
+            <li>NovaStar ได้รับภาพจาก Input ที่จับคู่หรือไม่</li>
+            <li>ภาพต้นฉบับมีความละเอียดและสัดส่วนถูกต้องหรือไม่</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section
+        id="monitor-out"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          3. HDMI Monitor Out ทำหน้าที่อะไร
+        </h2>
+
+        <p class="mt-4 leading-8 text-slate-700">
+          ช่อง HDMI Output ของ VX600 รองรับโหมด Monitor และ Video Output
+          ในโหมด Monitor ภาพที่แสดงบนจอ LED จะถูกประมวลผลให้เหมาะกับ
+          ความละเอียดและเฟรมเรตของช่อง HDMI Output
+          แล้วส่งไปยังจอหรืออุปกรณ์ที่ต่ออยู่
+        </p>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          <article class="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+            <h3 class="font-black text-slate-900">เปลี่ยน Source</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              ภาพ Monitor Out เปลี่ยนตาม Source ที่กำลังใช้งาน
+            </p>
+          </article>
+
+          <article class="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+            <h3 class="font-black text-slate-900">Main Layer และ PIP</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              เห็นภาพหลังจัดขนาด ตำแหน่ง และซ้อน Layer แล้ว
+            </p>
+          </article>
+
+          <article class="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+            <h3 class="font-black text-slate-900">Program Feed</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              ใช้ส่งภาพผลลัพธ์ไปยัง Capture Card, Recorder หรือจอควบคุม
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-6 space-y-2">
+          <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">
+            Input 1 / Input 2 / Input 3 และการจัด Layers
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">
+            NovaStar VX600 ประมวลผลภาพ
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl bg-emerald-600 p-4 text-center font-bold text-white">
+              Ethernet/LAN → LED Wall
+            </div>
+
+            <div class="rounded-xl bg-emerald-100 p-4 text-center font-bold text-emerald-900">
+              HDMI Monitor Out → Program Feed
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <p class="font-black text-blue-950">
+            หมายเหตุ
+          </p>
+
+          <p class="mt-2 leading-7 text-blue-900">
+            ภาพ Monitor Out เป็นภาพที่เหมาะสำหรับใช้ตรวจสอบภาพผลลัพธ์
+            แต่ไม่จำเป็นต้องตรงแบบพิกเซลต่อพิกเซลกับจอ LED Wall
+            เพราะช่อง HDMI Output อาจปรับภาพให้เหมาะกับความละเอียดของอุปกรณ์ปลายทาง
+          </p>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section
+        id="compare"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          4. ตารางเปรียบเทียบ LOOP กับ Monitor Out
+        </h2>
+
+        <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="min-w-full divide-y divide-slate-200 text-sm">
+            <thead class="bg-slate-900 text-white">
+              <tr>
+                <th class="px-4 py-3 text-left">หัวข้อ</th>
+                <th class="px-4 py-3 text-left">HDMI LOOP</th>
+                <th class="px-4 py-3 text-left">HDMI Monitor Out</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-200 bg-white">
+              <tr>
+                <td class="px-4 py-4 font-semibold">ภาพที่ส่งออก</td>
+                <td class="px-4 py-4">ภาพตรงจาก Input ที่จับคู่</td>
+                <td class="px-4 py-4">ภาพผลลัพธ์หลังประมวลผล</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-4 font-semibold">เปลี่ยนตาม Source บน LED</td>
+                <td class="px-4 py-4">ไม่เปลี่ยน หากยังเป็น LOOP ของ Input เดิม</td>
+                <td class="px-4 py-4">เปลี่ยนตาม Source และ Layout</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-4 font-semibold">เห็น PIP และ Layers</td>
+                <td class="px-4 py-4">ไม่เห็นการจัดภาพของ NovaStar</td>
+                <td class="px-4 py-4">เห็นภาพหลังจัด Layers</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-4 font-semibold">เหมาะสำหรับ</td>
+                <td class="px-4 py-4">เช็กสัญญาณต้นทาง</td>
+                <td class="px-4 py-4">เช็กภาพสุดท้าย ส่ง Zoom บันทึก หรือถ่ายทอดสด</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section
+        id="return-to-matrix"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          5. นำ Monitor Out วนกลับเข้า VAVE Matrix ได้หรือไม่
+        </h2>
+
+        <p class="mt-4 leading-8 text-slate-700">
+          ทำได้ โดยถือว่า NovaStar Monitor Out เป็นแหล่งสัญญาณ HDMI อีกหนึ่งแหล่ง
+          แล้วต่อเข้า Input ที่ว่างของ VAVE Matrix
+          จากนั้นจึงใช้ Matrix ส่ง Program Feed ไปยังปลายทางที่ต้องการ
+        </p>
+
+        <div class="mt-6 space-y-2">
+          <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">
+            NovaStar VX600 — HDMI Monitor Out
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">
+            VAVE Input ที่กำหนดเป็น “VX600 MONITOR RETURN”
+          </div>
+
+          <div class="rounded-xl bg-emerald-600 p-4 text-center font-bold text-white">
+            VAVE Output B → Monitor / Capture Card / Recorder / ห้องเสริม
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <h3 class="font-black text-blue-950">
+            ป้ายที่แนะนำให้ติดบน VAVE
+          </h3>
+
+          <p class="mt-3 text-lg font-black leading-8 text-blue-900">
+            VX600 MONITOR RETURN — ห้ามส่งออก OUTPUT A
+          </p>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section
+        id="feedback-loop"
+        class="rounded-3xl border-2 border-red-300 bg-red-50 p-6 shadow-soft sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-red-950">
+          6. ข้อห้าม: อย่าเลือก Monitor Return ออกทาง Output A
+        </h2>
+
+        <p class="mt-4 leading-8 text-red-900">
+          ในระบบปัจจุบัน VAVE Output A ส่งภาพไปยัง Splitter และ NovaStar
+          หากนำ NovaStar Monitor Out กลับเข้า VAVE Input
+          แล้วเลือก Input ดังกล่าวให้ออกทาง Output A
+          ภาพจะถูกส่งกลับเข้า NovaStar ซ้ำอีกครั้ง
+        </p>
+
+        <div class="mt-6 space-y-2">
+          <div class="flow-arrow rounded-xl bg-red-100 p-4 text-center font-bold text-red-950">
+            VAVE Output A
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-red-100 p-4 text-center font-bold text-red-950">
+            CYP Splitter → NovaStar VX600
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-red-100 p-4 text-center font-bold text-red-950">
+            NovaStar HDMI Monitor Out
+          </div>
+
+          <div class="flow-arrow rounded-xl bg-red-100 p-4 text-center font-bold text-red-950">
+            กลับเข้า VAVE Input “MONITOR RETURN”
+          </div>
+
+          <div class="rounded-xl bg-red-700 p-4 text-center font-black text-white">
+            กด Input นี้ออก Output A → ภาพวนกลับเข้าสู่ตัวเอง
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-4 md:grid-cols-2">
+          <article class="rounded-2xl bg-white p-5 ring-1 ring-red-200">
+            <h3 class="font-black text-red-950">
+              อาการที่อาจเกิดขึ้น
+            </h3>
+
+            <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-red-900">
+              <li>ภาพกระจกซ้อนต่อกันเป็นอุโมงค์</li>
+              <li>ภาพย่อซ้อนเข้าไปเรื่อย ๆ</li>
+              <li>ภาพกะพริบหรือ HDMI จับสัญญาณใหม่ซ้ำ</li>
+              <li>ภาพดำหรือสัญญาณไม่เสถียร</li>
+            </ul>
+          </article>
+
+          <article class="rounded-2xl bg-white p-5 ring-1 ring-red-200">
+            <h3 class="font-black text-red-950">
+              ชื่อทางเทคนิค
+            </h3>
+
+            <p class="mt-3 leading-7 text-red-900">
+              อาการนี้เรียกว่า <strong>Video Feedback Loop</strong>
+              ลักษณะคล้ายการนำกล้องไปถ่ายหน้าจอที่กำลังแสดงภาพจากกล้องตัวนั้นเอง
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section
+        id="safe-routing"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          7. Routing ที่ปลอดภัย
+        </h2>
+
+        <div class="mt-6 grid gap-5 lg:grid-cols-2">
+          <article class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <p class="text-sm font-bold text-emerald-700">
+              เส้นทางหลัก
+            </p>
+
+            <h3 class="mt-2 text-lg font-black text-emerald-950">
+              Output A ใช้ส่ง Source ปกติไป NovaStar
+            </h3>
+
+            <p class="mt-3 leading-7 text-emerald-900">
+              VAVE Input ปกติ → Output A → Splitter → NovaStar → LED Wall
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+            <p class="text-sm font-bold text-blue-700">
+              เส้นทาง Program Feed
+            </p>
+
+            <h3 class="mt-2 text-lg font-black text-blue-950">
+              Monitor Return ใช้กับ Output B
+            </h3>
+
+            <p class="mt-3 leading-7 text-blue-900">
+              NovaStar Monitor Out → VAVE Monitor Return → Output B →
+              Capture Card / Monitor / Recorder
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p class="font-black text-amber-950">
+            กฎจำง่าย
+          </p>
+
+          <p class="mt-2 text-xl font-black leading-8 text-amber-900">
+            “ภาพที่กลับจาก NovaStar ห้ามย้อนเข้าเส้นทางที่ส่งกลับไป NovaStar”
+          </p>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section
+        id="recovery"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          8. วิธีแก้เมื่อเผลอกดจนเกิดภาพวน
+        </h2>
+
+        <ol class="mt-6 space-y-4">
+          <li class="rounded-2xl border border-slate-200 p-5">
+            <strong>1. เปลี่ยน VAVE Output A กลับไปยัง Source ปกติทันที</strong>
+            <p class="mt-2 leading-7 text-slate-700">
+              เช่น Maxhub, HDMI เวที หรือกล้อง PTZ ที่ไม่ใช่ Monitor Return
+            </p>
+          </li>
+
+          <li class="rounded-2xl border border-slate-200 p-5">
+            <strong>2. หากควบคุมไม่ทัน ให้ถอดสาย Monitor Out ที่กลับเข้า VAVE ชั่วคราว</strong>
+            <p class="mt-2 leading-7 text-slate-700">
+              การตัดเส้นทางย้อนกลับจะหยุด Video Feedback Loop ได้ทันที
+            </p>
+          </li>
+
+          <li class="rounded-2xl border border-slate-200 p-5">
+            <strong>3. รอให้อุปกรณ์ HDMI จับสัญญาณใหม่</strong>
+            <p class="mt-2 leading-7 text-slate-700">
+              หลังตัดวงจรแล้ว อุปกรณ์อาจใช้เวลาสักครู่ก่อนภาพกลับมาเสถียร
+            </p>
+          </li>
+
+          <li class="rounded-2xl border border-slate-200 p-5">
+            <strong>4. ตรวจสอบ Routing ของ Output A และ B ก่อนต่อสายกลับ</strong>
+            <p class="mt-2 leading-7 text-slate-700">
+              ยืนยันว่า Monitor Return ถูกส่งไป Output B หรือปลายทางที่ไม่ย้อนกลับเท่านั้น
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 9 -->
+      <section
+        id="applications"
+        class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-slate-900">
+          9. ประโยชน์ของการนำ Monitor Out กลับเข้า Matrix
+        </h2>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <article class="rounded-2xl border border-slate-200 p-5">
+            <h3 class="font-black text-slate-900">
+              ส่งเข้า Capture Card และ Zoom
+            </h3>
+            <p class="mt-2 leading-7 text-slate-600">
+              ให้ผู้เข้าร่วมออนไลน์เห็น Program Feed ที่จัดจาก NovaStar
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 p-5">
+            <h3 class="font-black text-slate-900">
+              บันทึกหรือถ่ายทอดสด
+            </h3>
+            <p class="mt-2 leading-7 text-slate-600">
+              ส่งไปยัง Recorder, OBS หรือเครื่อง Streaming
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 p-5">
+            <h3 class="font-black text-slate-900">
+              จอควบคุมหลังห้อง
+            </h3>
+            <p class="mt-2 leading-7 text-slate-600">
+              เจ้าหน้าที่เห็นภาพผลลัพธ์แม้มองไม่เห็น LED Wall จริง
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 p-5">
+            <h3 class="font-black text-slate-900">
+              ห้องเสริมหรือพื้นที่ Overflow
+            </h3>
+            <p class="mt-2 leading-7 text-slate-600">
+              กระจายภาพรายการไปยังอีกห้องหรืออีกพื้นที่หนึ่ง
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section
+        id="source"
+        class="rounded-3xl bg-slate-900 p-6 text-slate-300 shadow-soft sm:p-8"
+      >
+        <h2 class="text-2xl font-black text-white">
+          10. แหล่งอ้างอิงทางเทคนิค
+        </h2>
+
+        <p class="mt-4 leading-7">
+          อ้างอิงจาก NovaStar VX600 All-in-One Controller User Manual
+          ซึ่งระบุว่า HDMI 1.3-1 รองรับ Loop-through
+          และช่อง HDMI Output รองรับ Monitor และ Video Output modes
+          โดยในโหมด Monitor จะประมวลผลภาพบนจอ LED ให้เหมาะกับช่อง HDMI Output
+        </p>
+
+        <a
+          href="https://oss.novastar.tech/uploads/2022/11/VX600-All-in-One-Controller-User-Manual-V1.2.1.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="no-print mt-5 inline-flex rounded-xl bg-white px-4 py-2.5 font-bold text-slate-900 hover:bg-slate-100 transition"
+        >
+          เปิดคู่มือ NovaStar VX600
+        </a>
+      </section>
+
+      <footer class="rounded-3xl bg-navy-950 p-6 text-slate-300">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p class="font-black text-white">
+              แหล่งความรู้ระบบภาพ
+            </p>
+            <p class="mt-1 text-sm">
+              LOOP = ตรวจสอบ Input ต้นทาง |
+              Monitor Out = ตรวจสอบและส่งต่อ Program Feed
+            </p>
+          </div>
+
+          <a
+            href="index.html"
+            class="rounded-xl bg-white px-4 py-2.5 font-bold text-navy-900 hover:bg-slate-100 transition"
+          >
+            กลับหน้า Home
+          </a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <footer class="no-print border-t border-slate-200 bg-white py-6 mt-12 text-center text-sm text-slate-500">
+    <div class="mx-auto max-w-7xl px-5">
+      <p>© ศูนย์รวมคู่มือระบบภาพห้องประชุม (Meeting Room AV Manual)</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือชุดที่ 2 — โหมดการประชุมแบบ Hybrid</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              50: '#f2f7ff',
+              100: '#e3edff',
+              200: '#c8dcff',
+              600: '#2459c4',
+              700: '#1c469c',
+              800: '#193c7d',
+              900: '#172f5f',
+              950: '#0d1c3b'
+            }
+          },
+          boxShadow: {
+            soft: '0 14px 40px rgba(15, 23, 42, 0.08)',
+            card: '0 8px 24px rgba(15, 23, 42, 0.07)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Tahoma, "Noto Sans Thai", system-ui, sans-serif; }
+    .flow-arrow::after {
+      content: "↓";
+      display: block;
+      text-align: center;
+      margin-top: .5rem;
+      font-size: 1.75rem;
+      line-height: 1;
+      color: #2563eb;
+      font-weight: 700;
+    }
+    .flow-arrow:last-child::after { display:none; }
+    @media print {
+      .no-print { display:none !important; }
+      body { background:white !important; }
+      .shadow-soft, .shadow-card { box-shadow:none !important; }
+      section { break-inside:avoid; }
+    }
+  </style>
+
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+  <div class="no-print sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
+      <a href="index.html" class="font-black text-navy-800 text-lg tracking-tight">คู่มือระบบภาพห้องประชุม</a>
+      <div class="flex flex-wrap gap-2 text-sm font-semibold">
+        <a href="index.html" class="rounded-lg bg-slate-100 px-3 py-2 text-slate-700 hover:bg-slate-200">Home</a>
+        <a href="manual-system.html" class="rounded-lg bg-blue-50 px-3 py-2 text-blue-800 hover:bg-blue-100">ระบบภาพหลัก</a>
+        <a href="manual-hybrid.html" class="rounded-lg bg-violet-700 px-3 py-2 text-white hover:bg-violet-800 shadow-sm">Hybrid Meeting</a>
+        <a href="knowledge-loop-monitor-out.html" class="rounded-lg bg-amber-50 px-3 py-2 text-amber-800 hover:bg-amber-100">LOOP / Monitor Out</a>
+        <a href="av-use-cases.html" class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-800 hover:bg-emerald-100">9 รูปแบบการใช้งาน</a>
+        <button type="button" onclick="window.print()" class="rounded-lg bg-navy-700 px-3 py-2 text-white hover:bg-navy-800 transition">พิมพ์</button>
+      </div>
+    </div>
+  </div>
+
+
+<header class="bg-gradient-to-br from-navy-950 via-violet-900 to-blue-800 text-white">
+  <div class="mx-auto max-w-7xl px-5 py-12 lg:py-16">
+    <span class="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-violet-100">คู่มือชุดที่ 2</span>
+    <h1 class="mt-5 text-3xl font-black sm:text-5xl">โหมดการประชุมแบบ Hybrid</h1>
+    <p class="mt-4 max-w-4xl text-lg leading-8 text-slate-200">
+      กล้องวิดีโอ → HDMI จากเวที → Capture Card → Notebook/Zoom
+      และส่งภาพจาก Notebook HDMI Out กลับเข้าสู่ VAVE Input 4 เพื่อขึ้นจอ LED Full Color
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a href="index.html" class="rounded-xl bg-white px-4 py-2.5 font-bold text-navy-900 hover:bg-slate-100 transition">← กลับหน้า Home</a>
+      <a href="manual-system.html" class="rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 font-bold text-white hover:bg-white/20 transition">← ไปคู่มือชุดที่ 1</a>
+    </div>
+  </div>
+</header>
+
+<div class="mx-auto grid max-w-7xl gap-8 px-5 py-8 lg:grid-cols-[270px_minmax(0,1fr)]">
+  <aside class="no-print lg:sticky lg:top-24 lg:self-start">
+    <nav class="rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-200">
+      <p class="font-black text-slate-900">สารบัญ</p>
+      <div class="mt-4 space-y-1 text-sm">
+        <a href="#diagram" class="block rounded-lg px-3 py-2 hover:bg-slate-100">ผังโหมด Hybrid</a>
+        <a href="#overview" class="block rounded-lg px-3 py-2 hover:bg-slate-100">1. ภาพรวม</a>
+        <a href="#equipment" class="block rounded-lg px-3 py-2 hover:bg-slate-100">2. อุปกรณ์</a>
+        <a href="#flow" class="block rounded-lg px-3 py-2 hover:bg-slate-100">3. เส้นทางสัญญาณ</a>
+        <a href="#installation" class="block rounded-lg px-3 py-2 hover:bg-slate-100">4. การติดตั้ง</a>
+        <a href="#zoom" class="block rounded-lg px-3 py-2 hover:bg-slate-100">5. ตั้งค่า Zoom</a>
+        <a href="#display" class="block rounded-lg px-3 py-2 hover:bg-slate-100">6. ส่งภาพกลับ VAVE</a>
+        <a href="#checklist" class="block rounded-lg px-3 py-2 hover:bg-slate-100">7. เช็กลิสต์</a>
+        <a href="#troubleshoot" class="block rounded-lg px-3 py-2 hover:bg-slate-100">8. ตรวจสอบปัญหา</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="space-y-8">
+    <section id="diagram" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">ผังการประชุมแบบ Hybrid</h2>
+      <p class="mt-2 leading-7 text-slate-600">
+        สามารถนำภาพไดอะแกรมโหมด Hybrid มาแทนไฟล์
+        <code class="rounded bg-slate-100 px-2 py-1">images/hybrid-overview.svg</code>
+      </p>
+      <figure class="mt-5">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
+          <img src="images/hybrid-overview.svg" alt="ผังระบบประชุมแบบ Hybrid" class="mx-auto h-auto w-full max-w-6xl object-contain">
+        </div>
+        <figcaption class="mt-3 text-center text-sm text-slate-500">ตำแหน่งสำหรับใส่ภาพผังระบบชุดที่ 2</figcaption>
+      </figure>
+    </section>
+
+    <section id="overview" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">1. ภาพรวมการทำงาน</h2>
+      <p class="mt-4 leading-8 text-slate-700">
+        Notebook ทำหน้าที่เป็นตัวกลางสองทิศทาง คือรับภาพจากกล้องวิดีโอผ่าน Capture Card เพื่อส่งเข้า Zoom
+        และส่งภาพหน้าจอ Zoom ออกทาง HDMI กลับเข้าสู่ VAVE SW-42-AP ที่ Input 4
+      </p>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+          <p class="font-black text-emerald-950">จากห้องไปออนไลน์</p>
+          <p class="mt-2 leading-7 text-emerald-900">กล้อง → HDMI เวที → Capture Card → USB → Notebook → Zoom</p>
+        </div>
+        <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <p class="font-black text-blue-950">จากออนไลน์กลับเข้าห้อง</p>
+          <p class="mt-2 leading-7 text-blue-900">Notebook HDMI Out → VAVE Input 4 → Splitter → NovaStar → LED</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="equipment" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">2. อุปกรณ์ที่ใช้</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>กล้องวิดีโอ</strong><p class="mt-2 text-sm leading-6 text-slate-600">ถ่ายภาพผู้บรรยายและบรรยากาศภายในห้อง</p></div>
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>สาย HDMI จากเวที</strong><p class="mt-2 text-sm leading-6 text-slate-600">นำสัญญาณภาพจากกล้องมายังจุดควบคุม</p></div>
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>Video Capture Card</strong><p class="mt-2 text-sm leading-6 text-slate-600">แปลง HDMI ให้ Notebook มองเห็นเป็นกล้องผ่าน USB</p></div>
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>Notebook</strong><p class="mt-2 text-sm leading-6 text-slate-600">เปิด Zoom รับภาพกล้อง และส่งภาพหน้าจอออกทาง HDMI</p></div>
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>VAVE SW-42-AP</strong><p class="mt-2 text-sm leading-6 text-slate-600">รับภาพจาก Notebook ที่ Input 4 และส่งทาง Output A</p></div>
+        <div class="rounded-2xl border border-slate-200 p-5"><strong>ระบบแสดงผลหลัก</strong><p class="mt-2 text-sm leading-6 text-slate-600">Splitter, NovaStar, TV, Projector และ LED P2.5</p></div>
+      </div>
+    </section>
+
+    <section id="flow" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">3. เส้นทางสัญญาณ</h2>
+      <h3 class="mt-6 text-lg font-black text-slate-900">3.1 กล้องเข้าสู่ Zoom</h3>
+      <div class="mt-4 space-y-2">
+        <div class="flow-arrow rounded-xl bg-slate-900 p-4 text-center font-bold text-white">กล้องวิดีโอ — HDMI Out</div>
+        <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">สาย HDMI จากเวที</div>
+        <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">Video Capture Card — HDMI In</div>
+        <div class="flow-arrow rounded-xl bg-emerald-100 p-4 text-center font-bold text-emerald-900">USB เข้า Notebook</div>
+        <div class="rounded-xl bg-emerald-600 p-4 text-center font-bold text-white">Zoom — เลือก Capture Card เป็น Camera</div>
+      </div>
+
+      <h3 class="mt-8 text-lg font-black text-slate-900">3.2 ภาพ Zoom กลับขึ้น LED</h3>
+      <div class="mt-4 space-y-2">
+        <div class="flow-arrow rounded-xl bg-slate-900 p-4 text-center font-bold text-white">Notebook — HDMI Out</div>
+        <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">VAVE SW-42-AP — Input 4</div>
+        <div class="flow-arrow rounded-xl bg-blue-600 p-4 text-center font-bold text-white">VAVE — Output A</div>
+        <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">CYP CPLUS-V4T</div>
+        <div class="flow-arrow rounded-xl bg-fuchsia-100 p-4 text-center font-bold text-fuchsia-900">NovaStar VX600 — Input 1</div>
+        <div class="rounded-xl bg-emerald-600 p-4 text-center font-bold text-white">LAN → LED P2.5 Full Color</div>
+      </div>
+    </section>
+
+    <section id="installation" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">4. ขั้นตอนการติดตั้ง</h2>
+      <div class="mt-6 space-y-4">
+        
+        <div class="rounded-2xl border border-slate-200 p-5">
+          <div class="flex gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-700 font-black text-white">1</span>
+            <div><h3 class="font-black text-slate-900">ต่อกล้องเข้ากับ HDMI บนเวที</h3><p class="mt-2 leading-7 text-slate-700">ต่อ HDMI Out ของกล้องเข้าสู่สายหรือจุดต่อ HDMI บนเวที แล้วเปิดกล้องให้ส่งภาพออก</p></div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 p-5">
+          <div class="flex gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-700 font-black text-white">2</span>
+            <div><h3 class="font-black text-slate-900">ต่อสาย HDMI เข้าสู่ Capture Card</h3><p class="mt-2 leading-7 text-slate-700">เสียบสายจากเวทีเข้าช่อง HDMI Input ของ Capture Card</p></div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 p-5">
+          <div class="flex gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-700 font-black text-white">3</span>
+            <div><h3 class="font-black text-slate-900">ต่อ Capture Card เข้ากับ Notebook</h3><p class="mt-2 leading-7 text-slate-700">เชื่อมต่อผ่าน USB และรอให้ระบบตรวจพบอุปกรณ์</p></div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 p-5">
+          <div class="flex gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-700 font-black text-white">4</span>
+            <div><h3 class="font-black text-slate-900">ต่อ HDMI Out ของ Notebook เข้า VAVE Input 4</h3><p class="mt-2 leading-7 text-slate-700">หาก Notebook ไม่มี HDMI ให้ใช้อะแดปเตอร์ USB-C to HDMI ที่เหมาะสม</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="zoom" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">5. การตั้งค่า Zoom</h2>
+      <ol class="mt-6 grid gap-3 md:grid-cols-2">
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>1.</strong> เปิด Zoom และเข้าห้องประชุม</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>2.</strong> เลือก Capture Card เป็น Camera</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>3.</strong> ตรวจสอบ Preview และมุมกล้อง</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>4.</strong> เลือก Gallery View หรือ Speaker View</li>
+      </ol>
+    </section>
+
+    <section id="display" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">6. การส่งภาพกลับเข้าสู่ VAVE</h2>
+      <p class="mt-4 leading-8 text-slate-700">
+        ต่อ HDMI Out ของ Notebook เข้า VAVE Input 4 แล้วกำหนดให้ Input 4 ส่งออกทาง Output A
+        ระบบจะแจกจ่ายภาพไปยัง TV, Projector และ NovaStar ตามเส้นทางระบบหลัก
+      </p>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 p-5">
+          <h3 class="font-black text-slate-900">Duplicate</h3>
+          <p class="mt-2 leading-7 text-slate-700">จอ Notebook และจอ LED แสดงภาพเดียวกัน ใช้ง่าย แต่ทุกหน้าต่างอาจขึ้นจอใหญ่</p>
+        </div>
+        <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <h3 class="font-black text-blue-950">Extend — แนะนำ</h3>
+          <p class="mt-2 leading-7 text-blue-900">ใช้ Notebook เป็นจอควบคุม และย้ายเฉพาะหน้าต่าง Zoom ไปยังจอภายนอก</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">7. เช็กลิสต์ก่อนเริ่มงาน</h2>
+      <div class="mt-6 grid gap-3 md:grid-cols-2">
+        <label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>กล้องเปิดและส่งภาพ HDMI แล้ว</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>Capture Card ต่อกับ Notebook และมีภาพ</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>Zoom เลือก Capture Card เป็น Camera</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>Notebook ต่อไฟเลี้ยง</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>Notebook HDMI Out เข้า VAVE Input 4</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>VAVE Input 4 ออกทาง Output A</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>Monitor ของ NovaStar มีภาพ</span></label><label class="flex gap-3 rounded-xl border border-slate-200 p-4"><input type="checkbox" class="mt-1 h-5 w-5 accent-blue-600"><span>LED Full Color แสดงภาพถูกต้อง</span></label>
+      </div>
+    </section>
+
+    <section id="troubleshoot" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">8. แนวทางตรวจสอบปัญหา</h2>
+      <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+          <thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">อาการ</th><th class="px-4 py-3 text-left">ตรวจสอบ</th></tr></thead>
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <tr><td class="px-4 py-4 font-semibold">Zoom ไม่เห็นกล้อง</td><td class="px-4 py-4">ตรวจสอบกล้อง สาย HDMI ช่อง HDMI In ของ Capture Card พอร์ต USB และเมนู Camera</td></tr>
+            <tr><td class="px-4 py-4 font-semibold">Notebook มีภาพ แต่ LED ไม่มีภาพ</td><td class="px-4 py-4">ตรวจสอบ HDMI Out, VAVE Input 4, Output A, Splitter และ NovaStar Input 1</td></tr>
+            <tr><td class="px-4 py-4 font-semibold">Monitor NovaStar ไม่มีภาพ</td><td class="px-4 py-4">ตรวจสอบเส้นทาง Notebook → VAVE → Splitter → NovaStar</td></tr>
+            <tr><td class="px-4 py-4 font-semibold">Monitor มีภาพ แต่ LED ไม่มีภาพ</td><td class="px-4 py-4">ตรวจสอบ NovaStar, สาย LAN, Receiving Card และไฟเลี้ยงจอ LED</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5">
+        <p class="font-black text-red-950">ข้อควรระวัง</p>
+        <p class="mt-2 leading-7 text-red-900">
+          ปิดการแจ้งเตือนของ Notebook ก่อนนำภาพขึ้นจอใหญ่ และทดสอบระบบล่วงหน้า 15–30 นาที
+          คู่มือนี้ครอบคลุมระบบภาพเป็นหลัก ส่วนระบบเสียงควรตั้งค่าและตรวจสอบแยกต่างหาก
+        </p>
+      </div>
+    </section>
+
+    <footer class="rounded-3xl bg-slate-900 p-6 text-slate-300">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="font-black text-white">คู่มือระบบภาพห้องประชุม — ชุดที่ 2</p>
+          <p class="mt-1 text-sm">โหมด Hybrid: Camera → Capture → Zoom → VAVE → LED</p>
+        </div>
+        <a href="manual-system.html" class="rounded-xl bg-white px-4 py-2.5 font-bold text-slate-900 hover:bg-slate-100 transition">← คู่มือชุดที่ 1</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<footer class="no-print border-t border-slate-200 bg-white py-6 mt-12 text-center text-sm text-slate-500">
+  <div class="mx-auto max-w-7xl px-5">
+    <p>© ศูนย์รวมคู่มือระบบภาพห้องประชุม (Meeting Room AV Manual)</p>
+  </div>
+</footer>
+
+</body>
+</html>

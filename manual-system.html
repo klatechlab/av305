@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือชุดที่ 1 — ระบบภาพห้องประชุม</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              50: '#f2f7ff',
+              100: '#e3edff',
+              200: '#c8dcff',
+              600: '#2459c4',
+              700: '#1c469c',
+              800: '#193c7d',
+              900: '#172f5f',
+              950: '#0d1c3b'
+            }
+          },
+          boxShadow: {
+            soft: '0 14px 40px rgba(15, 23, 42, 0.08)',
+            card: '0 8px 24px rgba(15, 23, 42, 0.07)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Tahoma, "Noto Sans Thai", system-ui, sans-serif; }
+    .flow-arrow::after {
+      content: "↓";
+      display: block;
+      text-align: center;
+      margin-top: .5rem;
+      font-size: 1.75rem;
+      line-height: 1;
+      color: #2563eb;
+      font-weight: 700;
+    }
+    .flow-arrow:last-child::after { display:none; }
+    @media print {
+      .no-print { display:none !important; }
+      body { background:white !important; }
+      .shadow-soft, .shadow-card { box-shadow:none !important; }
+      section { break-inside:avoid; }
+    }
+  </style>
+
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+  <div class="no-print sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
+      <a href="index.html" class="font-black text-navy-800 text-lg tracking-tight">คู่มือระบบภาพห้องประชุม</a>
+      <div class="flex flex-wrap gap-2 text-sm font-semibold">
+        <a href="index.html" class="rounded-lg bg-slate-100 px-3 py-2 text-slate-700 hover:bg-slate-200">Home</a>
+        <a href="manual-system.html" class="rounded-lg bg-blue-700 px-3 py-2 text-white hover:bg-blue-800 shadow-sm">ระบบภาพหลัก</a>
+        <a href="manual-hybrid.html" class="rounded-lg bg-violet-50 px-3 py-2 text-violet-800 hover:bg-violet-100">Hybrid Meeting</a>
+        <a href="knowledge-loop-monitor-out.html" class="rounded-lg bg-amber-50 px-3 py-2 text-amber-800 hover:bg-amber-100">LOOP / Monitor Out</a>
+        <a href="av-use-cases.html" class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-800 hover:bg-emerald-100">9 รูปแบบการใช้งาน</a>
+        <button type="button" onclick="window.print()" class="rounded-lg bg-navy-700 px-3 py-2 text-white hover:bg-navy-800 transition">พิมพ์</button>
+      </div>
+    </div>
+  </div>
+
+
+<header class="bg-gradient-to-br from-navy-950 via-navy-900 to-blue-800 text-white">
+  <div class="mx-auto max-w-7xl px-5 py-12 lg:py-16">
+    <span class="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-blue-100">คู่มือชุดที่ 1</span>
+    <h1 class="mt-5 text-3xl font-black sm:text-5xl">ระบบภาพห้องประชุม</h1>
+    <p class="mt-4 max-w-4xl text-lg leading-8 text-slate-200">
+      คู่มืออธิบายแหล่งสัญญาณ การเลือกภาพด้วย HDMI Matrix Switcher
+      การกระจายภาพ และการประมวลผลภาพสำหรับจอ LED Full Color
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a href="index.html" class="rounded-xl bg-white px-4 py-2.5 font-bold text-navy-900 hover:bg-slate-100 transition">← กลับหน้า Home</a>
+      <a href="manual-hybrid.html" class="rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 font-bold text-white hover:bg-white/20 transition">ไปคู่มือชุดที่ 2 →</a>
+    </div>
+  </div>
+</header>
+
+<div class="mx-auto grid max-w-7xl gap-8 px-5 py-8 lg:grid-cols-[270px_minmax(0,1fr)]">
+  <aside class="no-print lg:sticky lg:top-24 lg:self-start">
+    <nav class="rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-200">
+      <p class="font-black text-slate-900">สารบัญ</p>
+      <div class="mt-4 space-y-1 text-sm">
+        <a href="#diagram" class="block rounded-lg px-3 py-2 hover:bg-slate-100">ผังระบบ</a>
+        <a href="#overview" class="block rounded-lg px-3 py-2 hover:bg-slate-100">1. ภาพรวมระบบ</a>
+        <a href="#devices" class="block rounded-lg px-3 py-2 hover:bg-slate-100">2. รายละเอียดอุปกรณ์</a>
+        <a href="#signal-flow" class="block rounded-lg px-3 py-2 hover:bg-slate-100">3. เส้นทางสัญญาณ</a>
+        <a href="#io" class="block rounded-lg px-3 py-2 hover:bg-slate-100">4. สรุป Input/Output</a>
+        <a href="#usage" class="block rounded-lg px-3 py-2 hover:bg-slate-100">5. วิธีใช้งาน</a>
+        <a href="#troubleshoot" class="block rounded-lg px-3 py-2 hover:bg-slate-100">6. ตรวจสอบปัญหา</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="space-y-8">
+    <section id="diagram" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">ผังระบบภาพห้องประชุม</h2>
+      <p class="mt-2 leading-7 text-slate-600">
+        สามารถนำภาพไดอะแกรมฉบับสมบูรณ์มาแทนไฟล์ <code class="rounded bg-slate-100 px-2 py-1">images/system-overview.svg</code>
+        โดยใช้ชื่อไฟล์เดิม หรือแก้ค่า <code class="rounded bg-slate-100 px-2 py-1">src</code> ด้านล่าง
+      </p>
+      <figure class="mt-5">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
+          <img src="images/system-overview.svg" alt="ผังระบบภาพห้องประชุม" class="mx-auto h-auto w-full max-w-6xl object-contain">
+        </div>
+        <figcaption class="mt-3 text-center text-sm text-slate-500">ตำแหน่งสำหรับใส่ภาพผังระบบชุดที่ 1</figcaption>
+      </figure>
+    </section>
+
+    <section id="overview" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">1. ภาพรวมระบบ</h2>
+      <p class="mt-4 leading-8 text-slate-700">
+        ระบบรับสัญญาณภาพจาก Maxhub, จุด HDMI บนเวที, กล้อง PTZ และช่องสำรอง
+        เข้าสู่ VAVE SW-42-AP ซึ่งเป็น HDMI Matrix Switcher 4×2
+        จากนั้นส่งสัญญาณหลักทาง Output A ไปยัง CYP CPLUS-V4T เพื่อกระจายภาพไปยังอุปกรณ์แสดงผล
+      </p>
+      <div class="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+        <p class="font-black text-blue-950">เส้นทางหลัก</p>
+        <p class="mt-2 leading-7 text-blue-900">
+          แหล่งสัญญาณ → VAVE SW-42-AP → CYP CPLUS-V4T →
+          TV ซ้าย / TV ขวา / LED Projector / NovaStar VX600 → LED P2.5
+        </p>
+      </div>
+    </section>
+
+    <section id="devices" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">2. รายละเอียดอุปกรณ์</h2>
+      <div class="mt-6 space-y-5">
+        <article class="rounded-2xl border border-slate-200 p-5">
+          <h3 class="text-xl font-black text-slate-900">VAVE SW-42-AP</h3>
+          <p class="text-slate-500">HDMI Matrix Switcher 4×2</p>
+          <p class="mt-3 leading-7 text-slate-700">ใช้เลือกแหล่งสัญญาณจาก 4 Inputs และกำหนดออกทาง Output A หรือ Output B ได้อย่างอิสระ</p>
+          <div class="mt-4 grid gap-4 md:grid-cols-2">
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Inputs:</strong> 1 Maxhub, 2 HDMI เวที, 3 กล้อง PTZ, 4 ช่องสำรอง/Hybrid</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Outputs:</strong> A ไป Splitter, B ยังไม่ใช้งานในระบบปกติ</div>
+          </div>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 p-5">
+          <h3 class="text-xl font-black text-slate-900">CYP CPLUS-V4T</h3>
+          <p class="text-slate-500">HDMI Splitter 1×4</p>
+          <p class="mt-3 leading-7 text-slate-700">รับภาพจาก VAVE Output A แล้วทำสำเนาภาพเดียวกันออก 4 ช่อง</p>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Out 1:</strong> NovaStar VX600 Input 1</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Out 2:</strong> TV ขวา</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Out 3:</strong> TV ซ้าย</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Out 4:</strong> LED Projector</div>
+          </div>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 p-5">
+          <h3 class="text-xl font-black text-slate-900">NovaStar VX600</h3>
+          <p class="text-slate-500">LED Controller</p>
+          <p class="mt-3 leading-7 text-slate-700">
+            รับภาพจาก Splitter ทาง Input 1 ประมวลผลให้เหมาะกับจอ LED P2.5
+            แล้วส่งข้อมูลออกทาง LAN ไปยังจอ LED
+          </p>
+          <div class="mt-4 grid gap-4 md:grid-cols-3">
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Input 1:</strong> รับจาก Splitter</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>Loop:</strong> จับคู่ Input 1 ไปยัง Monitor</div>
+            <div class="rounded-xl bg-slate-50 p-4"><strong>LAN:</strong> ส่งไป LED P2.5</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="signal-flow" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">3. เส้นทางสัญญาณ</h2>
+      <div class="mt-6 space-y-2">
+        <div class="flow-arrow rounded-xl bg-slate-900 p-4 text-center font-bold text-white">Input 1–4</div>
+        <div class="flow-arrow rounded-xl bg-blue-100 p-4 text-center font-bold text-blue-900">VAVE SW-42-AP — เลือก Source</div>
+        <div class="flow-arrow rounded-xl bg-blue-600 p-4 text-center font-bold text-white">Output A</div>
+        <div class="flow-arrow rounded-xl bg-violet-100 p-4 text-center font-bold text-violet-900">CYP CPLUS-V4T — กระจาย 4 Outputs</div>
+        <div class="flow-arrow rounded-xl bg-fuchsia-100 p-4 text-center font-bold text-fuchsia-900">NovaStar VX600 — Input 1</div>
+        <div class="rounded-xl bg-emerald-600 p-4 text-center font-bold text-white">LAN → LED P2.5 Full Color</div>
+      </div>
+    </section>
+
+    <section id="io" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">4. สรุป Input และ Output</h2>
+      <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+          <thead class="bg-slate-900 text-white">
+            <tr><th class="px-4 py-3 text-left">อุปกรณ์</th><th class="px-4 py-3 text-left">ช่อง</th><th class="px-4 py-3 text-left">การเชื่อมต่อ</th></tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <tr><td class="px-4 py-3">VAVE</td><td class="px-4 py-3">Input 1</td><td class="px-4 py-3">Maxhub</td></tr>
+            <tr><td class="px-4 py-3">VAVE</td><td class="px-4 py-3">Input 2</td><td class="px-4 py-3">HDMI เวที</td></tr>
+            <tr><td class="px-4 py-3">VAVE</td><td class="px-4 py-3">Input 3</td><td class="px-4 py-3">กล้อง PTZ</td></tr>
+            <tr><td class="px-4 py-3">VAVE</td><td class="px-4 py-3">Input 4</td><td class="px-4 py-3">ช่องสำรอง / Notebook Hybrid</td></tr>
+            <tr><td class="px-4 py-3">VAVE</td><td class="px-4 py-3">Output A</td><td class="px-4 py-3">CYP CPLUS-V4T</td></tr>
+            <tr><td class="px-4 py-3">Splitter</td><td class="px-4 py-3">Out 1–4</td><td class="px-4 py-3">NovaStar / TV ขวา / TV ซ้าย / Projector</td></tr>
+            <tr><td class="px-4 py-3">NovaStar</td><td class="px-4 py-3">Loop</td><td class="px-4 py-3">Monitor ตรวจสอบภาพจาก Input 1</td></tr>
+            <tr><td class="px-4 py-3">NovaStar</td><td class="px-4 py-3">LAN</td><td class="px-4 py-3">LED P2.5 Full Color</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="usage" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">5. วิธีใช้งานระบบปกติ</h2>
+      <ol class="mt-6 grid gap-3 md:grid-cols-2">
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>1.</strong> เปิดอุปกรณ์ต้นทางและอุปกรณ์แสดงผล</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>2.</strong> เลือก Input ที่ต้องการบน VAVE</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>3.</strong> กำหนดให้ออกทาง Output A</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>4.</strong> ตรวจสอบภาพบน TV และ Projector</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>5.</strong> ตรวจสอบภาพที่ Monitor ของ NovaStar</li>
+        <li class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200"><strong>6.</strong> ตรวจสอบภาพบนจอ LED Full Color</li>
+      </ol>
+    </section>
+
+    <section id="troubleshoot" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200 sm:p-8">
+      <h2 class="text-2xl font-black text-slate-900">6. แนวทางตรวจสอบปัญหา</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <h3 class="font-black text-amber-950">ไม่มีภาพทุกจอ</h3>
+          <p class="mt-2 leading-7 text-amber-900">ตรวจสอบ Source, สาย HDMI, Input ที่เลือกบน VAVE และ Output A</p>
+        </div>
+        <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <h3 class="font-black text-blue-950">TV มีภาพ แต่ LED ไม่มีภาพ</h3>
+          <p class="mt-2 leading-7 text-blue-900">ตรวจสอบ Splitter Out 1, NovaStar Input 1, สาย LAN และการตั้งค่าจอ LED</p>
+        </div>
+        <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5">
+          <h3 class="font-black text-violet-950">Loop Monitor ไม่มีภาพ</h3>
+          <p class="mt-2 leading-7 text-violet-900">ตรวจสอบสัญญาณก่อนเข้า NovaStar และสายจากช่อง Loop ไปยัง Monitor</p>
+        </div>
+        <div class="rounded-2xl border border-rose-200 bg-rose-50 p-5">
+          <h3 class="font-black text-rose-950">Monitor มีภาพ แต่ LED ไม่มีภาพ</h3>
+          <p class="mt-2 leading-7 text-rose-900">ปัญหาน่าจะอยู่หลัง NovaStar เช่น Sending Port, LAN, Receiving Card หรือไฟเลี้ยงจอ</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="rounded-3xl bg-slate-900 p-6 text-slate-300">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="font-black text-white">คู่มือระบบภาพห้องประชุม — ชุดที่ 1</p>
+          <p class="mt-1 text-sm">ระบบหลัก: Source → Matrix → Splitter → NovaStar → LED</p>
+        </div>
+        <a href="manual-hybrid.html" class="rounded-xl bg-white px-4 py-2.5 font-bold text-slate-900 hover:bg-slate-100 transition">คู่มือชุดที่ 2 →</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<footer class="no-print border-t border-slate-200 bg-white py-6 mt-12 text-center text-sm text-slate-500">
+  <div class="mx-auto max-w-7xl px-5">
+    <p>© ศูนย์รวมคู่มือระบบภาพห้องประชุม (Meeting Room AV Manual)</p>
+  </div>
+</footer>
+
+</body>
+</html>
